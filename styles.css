@@ -1,0 +1,383 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 15px;
+}
+
+.header h1 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+    color: #f39c12;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.balance {
+    font-size: 1.2em;
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+.game-area {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.dealer-section,
+.player-section {
+    background: rgba(27, 94, 32, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #27ae60;
+}
+
+.dealer-section h2,
+.player-section h2 {
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    color: #f39c12;
+}
+
+.cards {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    min-height: 120px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card {
+    width: 80px;
+    height: 120px;
+    background: #fff;
+    border: 2px solid #333;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2em;
+    font-weight: bold;
+    color: #000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.5s ease-out;
+}
+
+.card.hidden {
+    background: linear-gradient(45deg, #c41e3a 0%, #8b0000 100%);
+    color: #fff;
+    font-size: 1em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card.hidden::after {
+    content: "🃏";
+    font-size: 3em;
+}
+
+.hand-value {
+    font-size: 1.1em;
+    color: #2ecc71;
+    font-weight: bold;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.betting-section {
+    background: rgba(41, 128, 185, 0.3);
+    padding: 20px;
+    border-radius: 10px;
+    border: 2px solid #3498db;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.betting-section h3 {
+    color: #3498db;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+}
+
+.bet-input {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    justify-content: center;
+}
+
+.bet-input input {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 120px;
+}
+
+.bet-input button {
+    padding: 10px 20px;
+    background: #27ae60;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.bet-input button:hover {
+    background: #229954;
+}
+
+.quick-bets {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.quick-bets button {
+    padding: 8px 15px;
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.quick-bets button:hover {
+    background: #2980b9;
+}
+
+.controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-hit {
+    background: #e74c3c;
+    color: #fff;
+}
+
+.btn-hit:hover {
+    background: #c0392b;
+    transform: scale(1.05);
+}
+
+.btn-stand {
+    background: #27ae60;
+    color: #fff;
+}
+
+.btn-stand:hover {
+    background: #229954;
+    transform: scale(1.05);
+}
+
+.btn-reset {
+    background: #9b59b6;
+    color: #fff;
+}
+
+.btn-reset:hover {
+    background: #8e44ad;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+.result-message {
+    text-align: center;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+    padding: 15px;
+    border-radius: 8px;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.result-message.win {
+    background: rgba(46, 204, 113, 0.3);
+    color: #2ecc71;
+    border: 2px solid #2ecc71;
+}
+
+.result-message.loss {
+    background: rgba(231, 76, 60, 0.3);
+    color: #e74c3c;
+    border: 2px solid #e74c3c;
+}
+
+.result-message.draw {
+    background: rgba(241, 196, 15, 0.3);
+    color: #f39c12;
+    border: 2px solid #f39c12;
+}
+
+.result-message.blackjack {
+    background: rgba(155, 89, 182, 0.3);
+    color: #9b59b6;
+    border: 2px solid #9b59b6;
+}
+
+.history {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #555;
+}
+
+.history h3 {
+    color: #f39c12;
+    margin-bottom: 10px;
+}
+
+.history-list {
+    max-height: 150px;
+    overflow-y: auto;
+}
+
+.history-item {
+    padding: 8px;
+    margin: 5px 0;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+    font-size: 0.9em;
+    color: #bdc3c7;
+}
+
+.history-item.win {
+    color: #2ecc71;
+    border-left: 3px solid #2ecc71;
+    padding-left: 12px;
+}
+
+.history-item.loss {
+    color: #e74c3c;
+    border-left: 3px solid #e74c3c;
+    padding-left: 12px;
+}
+
+.history-item.draw {
+    color: #f39c12;
+    border-left: 3px solid #f39c12;
+    padding-left: 12px;
+}
+
+/* Responsive Design for iPad */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    .header h1 {
+        font-size: 2em;
+    }
+
+    .card {
+        width: 70px;
+        height: 100px;
+        font-size: 1.5em;
+    }
+
+    .game-area {
+        gap: 30px;
+    }
+
+    button {
+        padding: 10px 20px;
+        font-size: 0.95em;
+    }
+
+    .bet-input input {
+        width: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5em;
+    }
+
+    .card {
+        width: 60px;
+        height: 85px;
+        font-size: 1.2em;
+    }
+
+    button {
+        padding: 8px 15px;
+        font-size: 0.9em;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .controls button {
+        width: 100%;
+    }
+
+    .quick-bets button {
+        flex: 1;
+        min-width: 60px;
+    }
+}
