@@ -57,56 +57,31 @@ function shuffle(cards) {
 
 let deck = createDeck();
 
+// Display cards
 function getCardClass(card) {
     return ['♥', '♦'].includes(card.suit) ? 'card red' : 'card';
-}
-
-function renderCard(card) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = getCardClass(card);
-    cardDiv.textContent = card.rank + card.suit;
-    return cardDiv;
-}
-
-function displayOpponentCards(reveal = false) {
-    [
-        ['opponent1Cards', pokerState.opponent1Hand, pokerState.opponent1Fold],
-        ['opponent2Cards', pokerState.opponent2Hand, pokerState.opponent2Fold]
-    ].forEach(([elementId, hand, folded]) => {
-        const container = document.getElementById(elementId);
-        container.innerHTML = '';
-        if (folded) {
-            container.classList.add('folded');
-        } else {
-            container.classList.remove('folded');
-        }
-        if (reveal && hand.length) {
-            hand.forEach((card) => container.appendChild(renderCard(card)));
-            return;
-        }
-        container.appendChild(document.createElement('span'));
-        container.appendChild(document.createElement('span'));
-    });
 }
 
 function displayCards() {
     const playerCardsDiv = document.getElementById('playerCards');
     playerCardsDiv.innerHTML = '';
-    pokerState.playerHand.forEach((card) => playerCardsDiv.appendChild(renderCard(card)));
+    
+    pokerState.playerHand.forEach((card) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = getCardClass(card);
+        cardDiv.textContent = card.rank + card.suit;
+        playerCardsDiv.appendChild(cardDiv);
+    });
 
     const communityDiv = document.getElementById('communityCards');
     communityDiv.innerHTML = '';
-    pokerState.communityCards.forEach((card) => communityDiv.appendChild(renderCard(card)));
-
-    displayOpponentCards(!pokerState.gameActive && pokerState.communityCards.length === 5);
-    updateHandRank();
-}
-
-function updateStacks() {
-    document.getElementById('balance').textContent = pokerState.balance;
-    document.querySelector('.opponent1-stack').textContent = pokerState.opponent1Stack;
-    document.querySelector('.opponent2-stack').textContent = pokerState.opponent2Stack;
-    document.getElementById('pot').textContent = pokerState.pot;
+    
+    pokerState.communityCards.forEach((card) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = getCardClass(card);
+        cardDiv.textContent = card.rank + card.suit;
+        communityDiv.appendChild(cardDiv);
+    });
 }
 
 function startPokerHand() {
@@ -149,15 +124,8 @@ function startPokerHand() {
     updateStacks();
     displayOpponentCards(false);
     displayCards();
-    updateGameStatus('Pre-flop: decide whether to check, call, raise, go all in, or fold.');
-}
-
-function takeChips(player, amount) {
-    const chips = Math.max(0, amount);
-    if (player === 'player') pokerState.balance -= chips;
-    if (player === 'opponent1') pokerState.opponent1Stack -= chips;
-    if (player === 'opponent2') pokerState.opponent2Stack -= chips;
-    pokerState.pot += chips;
+    document.getElementById('handRank').textContent = 'Hole cards dealt';
+    updateGameStatus('Your turn - Place your bet or fold.');
 }
 
 function quickBet(amount) {
@@ -491,8 +459,8 @@ function playAgain() {
     document.getElementById('playerCards').innerHTML = '';
     document.getElementById('communityCards').innerHTML = '';
     document.getElementById('handRank').textContent = 'Waiting for cards';
-    displayOpponentCards(false);
-    updateGameStatus('Set your blind to start a new hand.');
+    pokerState.opponent1Fold = false;
+    pokerState.opponent2Fold = false;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
