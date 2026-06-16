@@ -3,70 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blackjack Game</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Casino Games</title>
+    <link rel="stylesheet" href="home-styles.css">
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🃏 Blackjack</h1>
-            <div class="balance">
-                <span>Balance: $<span id="balance">1000</span></span>
-            </div>
+            <h1>🎰 Casino Games</h1>
+            <p>Choose your game and start playing!</p>
         </div>
-
-        <div class="game-area">
-            <!-- Dealer Section -->
-            <div class="dealer-section">
-                <h2>Dealer</h2>
-                <div class="cards dealer-cards" id="dealerCards"></div>
-                <div class="hand-value">
-                    Value: <span id="dealerValue">0</span>
+        <div class="games-grid">
+            <div class="game-card">
+                <div class="game-icon">🃏</div>
+                <h2>Blackjack</h2>
+                <p>Hit or Stand. Try to get 21!</p>
+                <div class="game-features">
+                    <span>🎯 Hit & Stand</span>
+                    <span>💰 Real Betting</span>
+                    <span>🤖 Dealer AI</span>
                 </div>
+                <a href="blackjack.html" class="play-btn">Play Blackjack</a>
             </div>
-
-            <!-- Player Section -->
-            <div class="player-section">
-                <h2>You</h2>
-                <div class="cards player-cards" id="playerCards"></div>
-                <div class="hand-value">
-                    Value: <span id="playerValue">0</span>
+            <div class="game-card">
+                <div class="game-icon">♠️</div>
+                <h2>Texas Hold'em</h2>
+                <p>Bluff your way to victory!</p>
+                <div class="game-features">
+                    <span>🎲 Hole Cards</span>
+                    <span>💰 Pot Betting</span>
+                    <span>🤖 AI Opponents</span>
                 </div>
+                <a href="holdem.html" class="play-btn">Play Texas Hold'em</a>
             </div>
         </div>
-
-        <!-- Betting Section -->
-        <div class="betting-section" id="bettingSection">
-            <h3>Place Your Bet</h3>
-            <div class="bet-input">
-                <input type="number" id="betAmount" min="10" max="1000" value="50" step="10">
-                <button onclick="placeBet()">Deal</button>
-            </div>
-            <div class="quick-bets">
-                <button onclick="quickBet(50)">$50</button>
-                <button onclick="quickBet(100)">$100</button>
-                <button onclick="quickBet(500)">$500</button>
-                <button onclick="allIn()" class="btn-all-in">All In</button>
-            </div>
+        <div class="info-section">
+            <h3>How to Play</h3>
+            <ul>
+                <li><strong>Blackjack:</strong> Get as close to 21 as possible without going over. Beat the dealer!</li>
+                <li><strong>Texas Hold'em:</strong> Make the best 5-card hand from 2 hole cards and 5 community cards. Outsmart your opponents!</li>
+            </ul>
         </div>
-
-        <!-- Game Controls -->
-        <div class="controls" id="gameControls" style="display: none;">
-            <button onclick="hit()" class="btn-hit">Hit</button>
-            <button onclick="stand()" class="btn-stand">Stand</button>
-            <button onclick="resetGame()" class="btn-reset">New Game</button>
-        </div>
-
-        <!-- Result Message -->
-        <div class="result-message" id="resultMessage"></div>
-
-        <!-- History -->
-        <div class="history">
-            <h3>Recent Results</h3>
-            <div id="history" class="history-list"></div>
+        <div class="footer">
+            <p>🎮 Have fun and play responsibly! 🎮</p>
         </div>
     </div>
-
-    <script src="script.js"></script>
 </body>
 </html>
