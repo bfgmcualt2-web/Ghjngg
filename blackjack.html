@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blackjack Royale</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main class="container">
+        <header class="header">
+            <a class="back-link" href="home.html">← Lobby</a>
+            <p class="eyebrow">Blackjack Royale</p>
+            <h1>🃏 Beat the Dealer</h1>
+            <div class="header-actions">
+                <div class="balance" aria-live="polite">Bankroll: $<span id="balance">1000</span></div>
+                <div class="mode-badge" id="modeBadge">Choose mode</div>
+            </div>
+        </header>
+
+        <section class="mode-select" id="modeSelect" aria-label="Choose Blackjack mode">
+            <div class="mode-card">
+                <span class="mode-icon">🎮</span>
+                <h2>Offline</h2>
+                <p>Play a solo Blackjack session against the dealer on this device.</p>
+                <button type="button" onclick="selectGameMode('offline')">Play Offline</button>
+            </div>
+            <div class="mode-card featured">
+                <span class="mode-icon">🌐</span>
+                <h2>Multiplayer</h2>
+                <p>Create or join a real WebSocket room with other people on the same server.</p>
+                <button type="button" onclick="selectGameMode('multiplayer')">Start Multiplayer</button>
+            </div>
+        </section>
+
+        <section class="multiplayer-panel" id="multiplayerPanel" style="display: none;" aria-label="Blackjack multiplayer connection">
+            <h2>Multiplayer room</h2>
+            <p>Start the included server, share the room code, and play with people connected to the same room.</p>
+            <div class="multiplayer-form">
+                <input id="playerName" type="text" maxlength="24" placeholder="Your name" value="Player">
+                <input id="roomCode" type="text" maxlength="24" placeholder="Room code" value="casino-room">
+                <input id="serverUrl" type="url" placeholder="WebSocket URL (optional)">
+                <button type="button" onclick="connectMultiplayer()">Connect</button>
+            </div>
+            <div class="multiplayer-status" id="multiplayerStatus">Not connected.</div>
+            <div class="players-list" id="playersList"></div>
+        </section>
+
+        <section class="table-shell game-content" aria-label="Blackjack table" style="display: none;">
+            <div class="game-area">
+                <section class="dealer-section hand-panel">
+                    <div class="hand-heading">
+                        <h2>Dealer</h2>
+                        <span class="hand-value">Value: <strong id="dealerValue">0</strong></span>
+                    </div>
+                    <div id="dealerCards" class="cards" aria-label="Dealer cards"></div>
+                </section>
+
+                <section class="player-section hand-panel">
+                    <div class="hand-heading">
+                        <h2>You</h2>
+                        <span class="hand-value">Value: <strong id="playerValue">0</strong></span>
+                    </div>
+                    <div id="playerCards" class="cards" aria-label="Player cards"></div>
+                </section>
+            </div>
+
+            <div id="resultMessage" class="result-message" aria-live="polite"></div>
+
+            <section id="bettingSection" class="betting-section">
+                <h3>Place your bet</h3>
+                <div class="bet-input">
+                    <label class="sr-only" for="betAmount">Bet amount</label>
+                    <input id="betAmount" type="number" min="10" step="10" value="50">
+                    <button type="button" onclick="placeBet()">Deal Cards</button>
+                </div>
+                <div class="quick-bets" aria-label="Quick bets">
+                    <button type="button" onclick="quickBet(25)">$25</button>
+                    <button type="button" onclick="quickBet(50)">$50</button>
+                    <button type="button" onclick="quickBet(100)">$100</button>
+                    <button type="button" onclick="quickBet(250)">$250</button>
+                </div>
+            </section>
+
+            <section id="gameControls" class="controls" style="display: none;">
+                <button type="button" class="btn-hit" onclick="hit()">Hit</button>
+                <button type="button" class="btn-stand" onclick="stand()">Stand</button>
+                <button type="button" class="btn-reset" onclick="resetGame()">New Round</button>
+            </section>
+        </section>
+
+        <aside class="history game-content" style="display: none;">
+            <h3>Recent hands</h3>
+            <div id="history" class="history-list" aria-live="polite"></div>
+        </aside>
+    </main>
+    <script src="multiplayer-client.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
