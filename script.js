@@ -54,6 +54,10 @@ function calculateHandValue(hand) {
 }
 
 // Display cards
+function getCardClass(card) {
+    return ['♥', '♦'].includes(card.suit) ? 'card red' : 'card';
+}
+
 function displayCards() {
     const playerCardsDiv = document.getElementById('playerCards');
     const dealerCardsDiv = document.getElementById('dealerCards');
@@ -62,7 +66,7 @@ function displayCards() {
     playerCardsDiv.innerHTML = '';
     gameState.playerHand.forEach((card, index) => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
+        cardDiv.className = getCardClass(card);
         cardDiv.textContent = card.rank + card.suit;
         playerCardsDiv.appendChild(cardDiv);
     });
@@ -71,7 +75,7 @@ function displayCards() {
     dealerCardsDiv.innerHTML = '';
     gameState.dealerHand.forEach((card, index) => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
+        cardDiv.className = getCardClass(card);
         if (index === gameState.dealerHand.length - 1 && !gameState.gameOver) {
             // Hide last dealer card until game is over
             cardDiv.className += ' hidden';
