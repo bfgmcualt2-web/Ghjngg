@@ -18,7 +18,9 @@ const pokerState = {
     opponent2Hand: [],
     opponent1Fold: false,
     opponent2Fold: false,
-    history: []
+    history: [],
+    mode: null,
+    multiplayer: null
 };
 
 const suits = ['♠', '♥', '♦', '♣'];

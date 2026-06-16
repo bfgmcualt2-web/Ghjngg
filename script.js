@@ -6,8 +6,62 @@ const gameState = {
     dealerHand: [],
     gameActive: false,
     gameOver: false,
-    history: []
+    history: [],
+    mode: null,
+    multiplayer: null
 };
+
+
+function selectGameMode(mode) {
+    gameState.mode = mode;
+    document.getElementById('modeSelect').style.display = 'none';
+    document.getElementById('modeBadge').textContent = mode === 'multiplayer' ? 'Multiplayer table' : 'Offline table';
+    if (mode === 'multiplayer') {
+        document.getElementById('multiplayerPanel').style.display = '';
+        document.getElementById('resultMessage').textContent = 'Connect to a room to play Blackjack with real people on this server.';
+        return;
+    }
+    document.querySelectorAll('.game-content').forEach((section) => {
+        section.style.display = '';
+    });
+    document.getElementById('resultMessage').textContent = 'Offline mode selected. Beat the dealer solo.';
+}
+
+
+function connectMultiplayer() {
+    gameState.multiplayer = new CasinoMultiplayer({
+        game: 'blackjack',
+        onConnected: ({ room }) => {
+            document.getElementById('multiplayerStatus').textContent = `Connected to room ${room}. Share this room code with other players.`;
+            document.querySelectorAll('.game-content').forEach((section) => {
+                section.style.display = '';
+            });
+        },
+        onPlayers: renderPlayers,
+        onEvent: (event) => {
+            if (event.type === 'action' && event.fromName) {
+                document.getElementById('multiplayerStatus').textContent = `${event.fromName}: ${event.action}`;
+            }
+        }
+    });
+    gameState.multiplayer.connect({
+        name: document.getElementById('playerName').value,
+        room: document.getElementById('roomCode').value,
+        url: document.getElementById('serverUrl').value
+    });
+}
+
+function renderPlayers(players) {
+    document.getElementById('playersList').innerHTML = players
+        .map((player) => `<span class="player-pill">${player.name}</span>`)
+        .join('');
+}
+
+function broadcastMultiplayerAction(action, payload = {}) {
+    if (gameState.mode === 'multiplayer') {
+        gameState.multiplayer?.broadcastAction(action, payload);
+    }
+}
 
 // Card values and suits
 const suits = ['♠', '♥', '♦', '♣'];
@@ -118,6 +172,7 @@ function placeBet() {
     gameState.balance -= betAmount;
     document.getElementById('balance').textContent = gameState.balance;
 
+    broadcastMultiplayerAction('deal', { bet: betAmount });
     startGame();
 }
 
@@ -177,6 +232,7 @@ function hit() {
     if (!gameState.gameActive) return;
 
     gameState.playerHand.push(deck.pop());
+    broadcastMultiplayerAction('hit');
     displayCards();
 
     const playerValue = calculateHandValue(gameState.playerHand);
@@ -192,6 +248,7 @@ function hit() {
 // Stand
 function stand() {
     if (!gameState.gameActive) return;
+    broadcastMultiplayerAction('stand');
     dealerPlay();
 }
 
@@ -323,6 +380,7 @@ function resetGame() {
     document.getElementById('resultMessage').innerHTML = '';
     document.getElementById('playerCards').innerHTML = '';
     document.getElementById('dealerCards').innerHTML = '';
+    broadcastMultiplayerAction('new-round');
 }
 
 // Initialize game
