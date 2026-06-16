@@ -34,13 +34,17 @@ function createDeck() {
 let deck = createDeck();
 
 // Display cards
+function getCardClass(card) {
+    return ['♥', '♦'].includes(card.suit) ? 'card red' : 'card';
+}
+
 function displayCards() {
     const playerCardsDiv = document.getElementById('playerCards');
     playerCardsDiv.innerHTML = '';
     
     pokerState.playerHand.forEach((card) => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
+        cardDiv.className = getCardClass(card);
         cardDiv.textContent = card.rank + card.suit;
         playerCardsDiv.appendChild(cardDiv);
     });
@@ -50,7 +54,7 @@ function displayCards() {
     
     pokerState.communityCards.forEach((card) => {
         const cardDiv = document.createElement('div');
-        cardDiv.className = 'card';
+        cardDiv.className = getCardClass(card);
         cardDiv.textContent = card.rank + card.suit;
         communityDiv.appendChild(cardDiv);
     });
@@ -113,6 +117,7 @@ function startPokerHand() {
     document.getElementById('playAgainControls').style.display = 'none';
 
     displayCards();
+    document.getElementById('handRank').textContent = 'Hole cards dealt';
     updateGameStatus('Your turn - Place your bet or fold.');
 }
 
@@ -265,6 +270,7 @@ function playAgain() {
     document.getElementById('gameStatus').innerHTML = '';
     document.getElementById('playerCards').innerHTML = '';
     document.getElementById('communityCards').innerHTML = '';
+    document.getElementById('handRank').textContent = 'Waiting for cards';
     pokerState.opponent1Fold = false;
     pokerState.opponent2Fold = false;
 }
