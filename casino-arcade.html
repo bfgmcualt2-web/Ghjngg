@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Arcade</title>
+    <link rel="stylesheet" href="arcade-styles.css">
+</head>
+<body>
+    <main class="arcade-shell">
+        <header class="arcade-header">
+            <a href="home.html" class="back-link">← Lobby</a>
+            <p class="eyebrow">10 Visual Gambling Games</p>
+            <h1>🎲 Casino Arcade</h1>
+            <p class="arcade-subtitle">Every game now shows reels, cards, dice, wheels, boards, or chips so players can watch the outcome.</p>
+            <div class="wallet">Arcade Bankroll: $<span id="arcadeBalance">1000</span></div>
+        </header>
+
+        <section class="arcade-grid" id="arcadeGrid" aria-label="Casino arcade games"></section>
+
+        <aside class="arcade-log">
+            <h2>Recent Spins</h2>
+            <div id="arcadeHistory" class="history-list" aria-live="polite"></div>
+        </aside>
+    </main>
+    <script src="arcade.js"></script>
+</body>
+</html>
