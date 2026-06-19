@@ -12,41 +12,10 @@
             <a href="home.html" class="back-btn">← Lobby</a>
             <p class="eyebrow">No-limit table</p>
             <h1>♠️ Texas Hold'em</h1>
-            <div class="header-actions">
-                <div class="balance">Bankroll: $<span id="balance">1000</span></div>
-                <div class="mode-badge" id="modeBadge">Choose mode</div>
-            </div>
+            <div class="balance">Bankroll: $<span id="balance">1000</span></div>
         </header>
 
-        <section class="mode-select" id="modeSelect" aria-label="Choose Texas Hold'em mode">
-            <div class="mode-card">
-                <span class="mode-icon">🎮</span>
-                <h2>Offline</h2>
-                <p>Play a solo table against two computer opponents on this device.</p>
-                <button type="button" onclick="selectGameMode('offline')">Play Offline</button>
-            </div>
-            <div class="mode-card featured">
-                <span class="mode-icon">🌐</span>
-                <h2>Multiplayer</h2>
-                <p>Create or join a real WebSocket room with other people on the same server.</p>
-                <button type="button" onclick="selectGameMode('multiplayer')">Start Multiplayer</button>
-            </div>
-        </section>
-
-        <section class="multiplayer-panel" id="multiplayerPanel" style="display: none;" aria-label="Texas Hold'em multiplayer connection">
-            <h2>Multiplayer room</h2>
-            <p>Start the included server, share the room code, and play with people connected to the same room.</p>
-            <div class="multiplayer-form">
-                <input id="playerName" type="text" maxlength="24" placeholder="Your name" value="Player">
-                <input id="roomCode" type="text" maxlength="24" placeholder="Room code" value="casino-room">
-                <input id="serverUrl" type="url" placeholder="WebSocket URL (optional)">
-                <button type="button" onclick="connectMultiplayer()">Connect</button>
-            </div>
-            <div class="multiplayer-status" id="multiplayerStatus">Not connected.</div>
-            <div class="players-list" id="playersList"></div>
-        </section>
-
-        <section class="poker-table game-content" aria-label="Texas Hold'em table" style="display: none;">
+        <section class="poker-table" aria-label="Texas Hold'em table">
             <div class="table-felt">
                 <div class="opponents-section" aria-label="Opponents">
                     <article class="opponent">
@@ -55,7 +24,7 @@
                             <div class="opponent-name">Opponent 1</div>
                             <div class="opponent-stack">Stack $<span class="opponent1-stack">1000</span></div>
                         </div>
-                        <div class="opponent-cards" id="opponent1Cards" aria-label="Opponent 1 cards"><span></span><span></span></div>
+                        <div class="opponent-cards" aria-label="Hidden opponent cards"><span></span><span></span></div>
                     </article>
                     <article class="opponent">
                         <div class="avatar">😎</div>
@@ -63,7 +32,7 @@
                             <div class="opponent-name">Opponent 2</div>
                             <div class="opponent-stack">Stack $<span class="opponent2-stack">1000</span></div>
                         </div>
-                        <div class="opponent-cards" id="opponent2Cards" aria-label="Opponent 2 cards"><span></span><span></span></div>
+                        <div class="opponent-cards" aria-label="Hidden opponent cards"><span></span><span></span></div>
                     </article>
                 </div>
 
@@ -90,7 +59,7 @@
             </div>
         </section>
 
-        <section class="action-panel game-content" style="display: none;">
+        <section class="action-panel">
             <div class="game-status" id="gameStatus" aria-live="polite">Set your blind to start a new hand.</div>
             <div class="result-message" id="resultMessage" aria-live="polite"></div>
 
@@ -124,12 +93,11 @@
             </div>
         </section>
 
-        <aside class="history game-content" style="display: none;">
+        <aside class="history">
             <h3>Session history</h3>
             <div id="history" class="history-list" aria-live="polite"></div>
         </aside>
     </main>
-    <script src="multiplayer-client.js"></script>
     <script src="holdem.js"></script>
 </body>
 </html>
