@@ -1,0 +1,30 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+    min-height: 100vh;
+    padding: 24px;
+    color: #fff;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(circle at 15% 10%, rgba(250, 204, 21, 0.22), transparent 28rem), radial-gradient(circle at 90% 15%, rgba(168, 85, 247, 0.2), transparent 30rem), linear-gradient(135deg, #070b18, #111827 52%, #020617);
+}
+.arcade-shell { width: min(1240px, 100%); margin: 0 auto; }
+.arcade-header { position: relative; text-align: center; margin-bottom: 28px; padding: 28px; border: 1px solid rgba(255,255,255,.14); border-radius: 28px; background: rgba(5,10,25,.72); box-shadow: 0 24px 70px rgba(0,0,0,.38); }
+.back-link { position: absolute; left: 24px; top: 24px; color: #facc15; text-decoration: none; font-weight: 950; }
+.eyebrow { color: #facc15; font-size: .78rem; font-weight: 950; letter-spacing: .22em; text-transform: uppercase; }
+h1 { margin: 8px 0 16px; font-size: clamp(2.4rem, 7vw, 5rem); line-height: .95; }
+.wallet { display: inline-flex; padding: 10px 18px; border-radius: 999px; color: #bbf7d0; background: rgba(52,211,153,.14); border: 1px solid rgba(52,211,153,.38); font-weight: 950; }
+.arcade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+.arcade-card, .arcade-log { border: 1px solid rgba(255,255,255,.14); border-radius: 24px; background: rgba(8,13,30,.82); box-shadow: 0 18px 42px rgba(0,0,0,.28); padding: 22px; }
+.arcade-card { display: grid; gap: 12px; min-height: 280px; }
+.game-icon { font-size: 3rem; filter: drop-shadow(0 10px 22px rgba(0,0,0,.38)); }
+.arcade-card h2 { color: #fde68a; }
+.arcade-card p { color: #cbd5e1; line-height: 1.5; }
+.stake { color: #86efac; font-weight: 900; }
+.arcade-card button { align-self: end; border: none; border-radius: 14px; padding: 12px 14px; color: #111827; background: linear-gradient(135deg, #facc15, #f97316); font-weight: 1000; cursor: pointer; }
+.game-result { min-height: 44px; color: #cbd5e1; font-weight: 800; }
+.game-result.win, .history-item.win { color: #86efac; }
+.game-result.loss, .history-item.loss { color: #fda4af; }
+.arcade-log { margin-top: 22px; }
+.arcade-log h2 { margin-bottom: 12px; color: #facc15; }
+.history-list { display: grid; gap: 8px; }
+.history-item { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.07); }
+@media (max-width: 760px) { .back-link { position: static; display: inline-flex; margin-bottom: 14px; } }

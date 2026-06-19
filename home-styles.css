@@ -189,3 +189,13 @@ body {
         font-size: 1.5em;
     }
 }
+.arcade-card-home {
+    border-color: #8e44ad;
+    background: linear-gradient(180deg, rgba(88, 28, 135, 0.82), rgba(0, 0, 0, 0.72));
+}
+
+.arcade-card-home .game-features span {
+    color: #f5d0fe;
+    border-color: #8e44ad;
+    background: rgba(142, 68, 173, 0.24);
+}
