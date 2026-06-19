@@ -23,92 +23,6 @@ const pokerState = {
     multiplayer: null
 };
 
-
-function selectGameMode(mode) {
-    pokerState.mode = mode;
-    document.getElementById('modeSelect').style.display = 'none';
-    document.getElementById('modeBadge').textContent = mode === 'multiplayer' ? 'Multiplayer table' : 'Offline table';
-    if (mode === 'multiplayer') {
-        document.getElementById('multiplayerPanel').style.display = '';
-        updateGameStatus("Open a browser room or exchange WebRTC invite codes to play Texas Hold\'em without downloading anything.");
-        return;
-    }
-    document.querySelectorAll('.game-content').forEach((section) => {
-        section.style.display = '';
-    });
-    updateGameStatus('Offline mode selected. Set your blind to play against computer opponents.');
-}
-
-
-function connectMultiplayer() {
-    ensureMultiplayerClient();
-    pokerState.multiplayer.connect({
-        name: document.getElementById('playerName').value,
-        room: document.getElementById('roomCode').value,
-        url: document.getElementById('serverUrl').value
-    });
-}
-
-
-async function createPeerInvite() {
-    ensureMultiplayerClient();
-    const output = await pokerState.multiplayer.createPeerInvite({
-        name: document.getElementById('playerName').value,
-        room: document.getElementById('roomCode').value
-    });
-    document.getElementById('peerOutput').value = output;
-    document.getElementById('multiplayerStatus').textContent = 'Host invite ready. Send this code to the other player.';
-}
-
-async function joinPeerInvite() {
-    ensureMultiplayerClient();
-    const output = await pokerState.multiplayer.acceptPeerInvite(document.getElementById('peerInvite').value, {
-        name: document.getElementById('playerName').value
-    });
-    document.getElementById('peerOutput').value = output;
-    document.getElementById('multiplayerStatus').textContent = 'Answer ready. Send this answer code back to the host.';
-}
-
-async function acceptPeerAnswer() {
-    ensureMultiplayerClient();
-    await pokerState.multiplayer.acceptPeerAnswer(document.getElementById('peerInvite').value);
-    document.getElementById('multiplayerStatus').textContent = 'Answer accepted. Browser peer connection is starting.';
-}
-
-function ensureMultiplayerClient() {
-    if (pokerState.multiplayer) return;
-    pokerState.multiplayer = new CasinoMultiplayer({
-        game: 'holdem',
-        onConnected: (event) => {
-            document.getElementById('multiplayerStatus').textContent = `Connected via ${event.transport || 'multiplayer'}. You can play together now.`;
-            document.querySelectorAll('.game-content').forEach((section) => {
-                section.style.display = '';
-            });
-        },
-        onPlayers: renderPlayers,
-        onEvent: (event) => {
-            if (event.type === 'action' && event.fromName) {
-                document.getElementById('multiplayerStatus').textContent = `${event.fromName}: ${event.action}`;
-            }
-            if (event.type === 'status') {
-                document.getElementById('multiplayerStatus').textContent = event.message;
-            }
-        }
-    });
-}
-
-function renderPlayers(players) {
-    document.getElementById('playersList').innerHTML = players
-        .map((player) => `<span class="player-pill">${player.name}</span>`)
-        .join('');
-}
-
-function broadcastMultiplayerAction(action, payload = {}) {
-    if (pokerState.mode === 'multiplayer') {
-        pokerState.multiplayer?.broadcastAction(action, payload);
-    }
-}
-
 const suits = ['♠', '♥', '♦', '♣'];
 const ranks = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const rankValues = Object.fromEntries(ranks.map((rank, index) => [rank, index + 2]));
@@ -145,56 +59,31 @@ function shuffle(cards) {
 
 let deck = createDeck();
 
+// Display cards
 function getCardClass(card) {
     return ['♥', '♦'].includes(card.suit) ? 'card red' : 'card';
-}
-
-function renderCard(card) {
-    const cardDiv = document.createElement('div');
-    cardDiv.className = getCardClass(card);
-    cardDiv.textContent = card.rank + card.suit;
-    return cardDiv;
-}
-
-function displayOpponentCards(reveal = false) {
-    [
-        ['opponent1Cards', pokerState.opponent1Hand, pokerState.opponent1Fold],
-        ['opponent2Cards', pokerState.opponent2Hand, pokerState.opponent2Fold]
-    ].forEach(([elementId, hand, folded]) => {
-        const container = document.getElementById(elementId);
-        container.innerHTML = '';
-        if (folded) {
-            container.classList.add('folded');
-        } else {
-            container.classList.remove('folded');
-        }
-        if (reveal && hand.length) {
-            hand.forEach((card) => container.appendChild(renderCard(card)));
-            return;
-        }
-        container.appendChild(document.createElement('span'));
-        container.appendChild(document.createElement('span'));
-    });
 }
 
 function displayCards() {
     const playerCardsDiv = document.getElementById('playerCards');
     playerCardsDiv.innerHTML = '';
-    pokerState.playerHand.forEach((card) => playerCardsDiv.appendChild(renderCard(card)));
+    
+    pokerState.playerHand.forEach((card) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = getCardClass(card);
+        cardDiv.textContent = card.rank + card.suit;
+        playerCardsDiv.appendChild(cardDiv);
+    });
 
     const communityDiv = document.getElementById('communityCards');
     communityDiv.innerHTML = '';
-    pokerState.communityCards.forEach((card) => communityDiv.appendChild(renderCard(card)));
-
-    displayOpponentCards(!pokerState.gameActive && pokerState.communityCards.length === 5);
-    updateHandRank();
-}
-
-function updateStacks() {
-    document.getElementById('balance').textContent = pokerState.balance;
-    document.querySelector('.opponent1-stack').textContent = pokerState.opponent1Stack;
-    document.querySelector('.opponent2-stack').textContent = pokerState.opponent2Stack;
-    document.getElementById('pot').textContent = pokerState.pot;
+    
+    pokerState.communityCards.forEach((card) => {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = getCardClass(card);
+        cardDiv.textContent = card.rank + card.suit;
+        communityDiv.appendChild(cardDiv);
+    });
 }
 
 function startPokerHand() {
@@ -210,7 +99,7 @@ function startPokerHand() {
         return;
     }
 
-    ensureDeck(20);
+    if (deck.length < 20) deck = createDeck();
 
     pokerState.playerHand = [deck.pop(), deck.pop()];
     pokerState.opponent1Hand = [deck.pop(), deck.pop()];
@@ -237,16 +126,8 @@ function startPokerHand() {
     updateStacks();
     displayOpponentCards(false);
     displayCards();
-    broadcastMultiplayerAction('start-hand', { blind });
-    updateGameStatus('Pre-flop: decide whether to check, call, raise, go all in, or fold.');
-}
-
-function takeChips(player, amount) {
-    const chips = Math.max(0, amount);
-    if (player === 'player') pokerState.balance -= chips;
-    if (player === 'opponent1') pokerState.opponent1Stack -= chips;
-    if (player === 'opponent2') pokerState.opponent2Stack -= chips;
-    pokerState.pot += chips;
+    document.getElementById('handRank').textContent = 'Hole cards dealt';
+    updateGameStatus('Your turn - Place your bet or fold.');
 }
 
 function quickBet(amount) {
@@ -268,7 +149,6 @@ function allInPoker() {
     pokerState.currentBet = Math.max(pokerState.currentBet, pokerState.playerContribution);
     opponentActions(true);
     updateStacks();
-    broadcastMultiplayerAction('all-in', { amount });
     updateGameStatus('You moved all in. Running out the board...');
     finishBoardAndShowdown();
 }
@@ -278,14 +158,12 @@ function fold() {
     pokerState.gameActive = false;
     const winner = pokerState.opponent1Fold ? 'opponent2' : 'opponent1';
     awardPot(winner);
-    broadcastMultiplayerAction('fold');
     finishHand(`You folded. ${winner === 'opponent1' ? 'Opponent 1' : 'Opponent 2'} wins the pot.`, 'loss');
 }
 
 function check() {
     if (!pokerState.gameActive) return;
     opponentActions(false);
-    broadcastMultiplayerAction('check');
     advanceStreetOrShowdown('You checked.');
 }
 
@@ -296,7 +174,6 @@ function call() {
     pokerState.playerContribution += callAmount;
     opponentActions(false);
     updateStacks();
-    broadcastMultiplayerAction('call', { amount: callAmount });
     advanceStreetOrShowdown(`You called $${callAmount}.`);
 }
 
@@ -312,7 +189,6 @@ function raise() {
     pokerState.currentBet = pokerState.playerContribution;
     opponentActions(true);
     updateStacks();
-    broadcastMultiplayerAction('raise', { amount: raiseAmount });
     advanceStreetOrShowdown(`You raised $${raiseAmount}.`);
 }
 
@@ -356,12 +232,10 @@ function advanceStreetOrShowdown(prefix) {
 }
 
 function dealNextStreet() {
-    ensureDeck(6);
     if (pokerState.gamePhase === 'pre-flop') {
         burnCard();
         pokerState.communityCards.push(deck.pop(), deck.pop(), deck.pop());
         pokerState.gamePhase = 'flop';
-        resetBettingRound();
         return;
     }
 
@@ -369,7 +243,6 @@ function dealNextStreet() {
         burnCard();
         pokerState.communityCards.push(deck.pop());
         pokerState.gamePhase = 'turn';
-        resetBettingRound();
         return;
     }
 
@@ -377,23 +250,10 @@ function dealNextStreet() {
         burnCard();
         pokerState.communityCards.push(deck.pop());
         pokerState.gamePhase = 'river';
-        resetBettingRound();
-    }
-}
-
-function resetBettingRound() {
-    pokerState.currentBet = 0;
-    pokerState.playerContribution = 0;
-}
-
-function ensureDeck(minimumCards = 1) {
-    if (deck.length < minimumCards) {
-        deck = createDeck();
     }
 }
 
 function burnCard() {
-    ensureDeck();
     deck.pop();
 }
 
@@ -601,57 +461,11 @@ function playAgain() {
     document.getElementById('playerCards').innerHTML = '';
     document.getElementById('communityCards').innerHTML = '';
     document.getElementById('handRank').textContent = 'Waiting for cards';
-    displayOpponentCards(false);
-    updateGameStatus('Set your blind to start a new hand.');
+    pokerState.opponent1Fold = false;
+    pokerState.opponent2Fold = false;
 }
-
-
-function bindHoldemControls() {
-    const bind = (id, handler) => {
-        const element = document.getElementById(id);
-        if (element) element.addEventListener('click', handler);
-    };
-
-    bind('playOfflineButton', () => selectGameMode('offline'));
-    bind('playMultiplayerButton', () => selectGameMode('multiplayer'));
-    bind('openBrowserRoomButton', connectMultiplayer);
-    bind('createPeerInviteButton', createPeerInvite);
-    bind('joinPeerInviteButton', joinPeerInvite);
-    bind('acceptPeerAnswerButton', acceptPeerAnswer);
-    bind('startHandButton', startPokerHand);
-    bind('allInBlindButton', allIn);
-    bind('foldButton', fold);
-    bind('checkButton', check);
-    bind('callButton', call);
-    bind('raiseButton', raise);
-    bind('allInPokerButton', allInPoker);
-    bind('playAgainButton', playAgain);
-
-    document.querySelectorAll('[data-quick-bet]').forEach((button) => {
-        button.addEventListener('click', () => quickBet(parseInt(button.dataset.quickBet, 10)));
-    });
-}
-
-Object.assign(globalThis, {
-    selectGameMode,
-    connectMultiplayer,
-    createPeerInvite,
-    joinPeerInvite,
-    acceptPeerAnswer,
-    startPokerHand,
-    quickBet,
-    allIn,
-    fold,
-    check,
-    call,
-    raise,
-    allInPoker,
-    playAgain
-});
 
 document.addEventListener('DOMContentLoaded', () => {
-    bindHoldemControls();
     updateStacks();
     updateGameStatus('Set your blind to start a new hand.');
 });
-

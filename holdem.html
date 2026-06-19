@@ -12,54 +12,10 @@
             <a href="home.html" class="back-btn">← Lobby</a>
             <p class="eyebrow">No-limit table</p>
             <h1>♠️ Texas Hold'em</h1>
-            <div class="header-actions">
-                <div class="balance">Bankroll: $<span id="balance">1000</span></div>
-                <div class="mode-badge" id="modeBadge">Choose mode</div>
-            </div>
+            <div class="balance">Bankroll: $<span id="balance">1000</span></div>
         </header>
 
-        <section class="mode-select" id="modeSelect" aria-label="Choose Texas Hold'em mode">
-            <div class="mode-card">
-                <span class="mode-icon">🎮</span>
-                <h2>Offline</h2>
-                <p>Play a solo table against two computer opponents on this device.</p>
-                <button type="button" id="playOfflineButton">Play Offline</button>
-            </div>
-            <div class="mode-card featured">
-                <span class="mode-icon">🌐</span>
-                <h2>Multiplayer</h2>
-                <p>Play with another person directly in the browser. No server download required.</p>
-                <button type="button" id="playMultiplayerButton">Start Multiplayer</button>
-            </div>
-        </section>
-
-        <section class="multiplayer-panel" id="multiplayerPanel" style="display: none;" aria-label="Texas Hold'em multiplayer connection">
-            <h2>Multiplayer room</h2>
-            <p>No download needed: use a browser room for tabs on this site, or exchange WebRTC invite/answer codes with a remote player.</p>
-            <div class="multiplayer-form">
-                <input id="playerName" type="text" maxlength="24" placeholder="Your name" value="Player">
-                <input id="roomCode" type="text" maxlength="24" placeholder="Room code" value="casino-room">
-                <input id="serverUrl" type="url" placeholder="Optional WebSocket URL">
-                <button type="button" id="openBrowserRoomButton">Open Browser Room</button>
-            </div>
-            <div class="multiplayer-status" id="multiplayerStatus">Not connected.</div>
-            <div class="players-list" id="playersList"></div>
-            <div class="peer-connect">
-                <h3>Remote player invite codes</h3>
-                <p>Host creates an invite, the second player pastes it and creates an answer, then the host accepts that answer.</p>
-                <div class="peer-buttons">
-                    <button type="button" id="createPeerInviteButton">Create Host Invite</button>
-                    <button type="button" id="joinPeerInviteButton">Join Invite</button>
-                    <button type="button" id="acceptPeerAnswerButton">Accept Answer</button>
-                </div>
-                <label for="peerInvite">Invite / answer code</label>
-                <textarea id="peerInvite" rows="4" placeholder="Paste invite code here to join, or answer code here for host"></textarea>
-                <label for="peerOutput">Your code to share</label>
-                <textarea id="peerOutput" rows="4" readonly placeholder="Generated invite or answer appears here"></textarea>
-            </div>
-        </section>
-
-        <section class="poker-table game-content" aria-label="Texas Hold'em table" style="display: none;">
+        <section class="poker-table" aria-label="Texas Hold'em table">
             <div class="table-felt">
                 <div class="opponents-section" aria-label="Opponents">
                     <article class="opponent">
@@ -68,7 +24,7 @@
                             <div class="opponent-name">Opponent 1</div>
                             <div class="opponent-stack">Stack $<span class="opponent1-stack">1000</span></div>
                         </div>
-                        <div class="opponent-cards" id="opponent1Cards" aria-label="Opponent 1 cards"><span></span><span></span></div>
+                        <div class="opponent-cards" aria-label="Hidden opponent cards"><span></span><span></span></div>
                     </article>
                     <article class="opponent">
                         <div class="avatar">😎</div>
@@ -76,7 +32,7 @@
                             <div class="opponent-name">Opponent 2</div>
                             <div class="opponent-stack">Stack $<span class="opponent2-stack">1000</span></div>
                         </div>
-                        <div class="opponent-cards" id="opponent2Cards" aria-label="Opponent 2 cards"><span></span><span></span></div>
+                        <div class="opponent-cards" aria-label="Hidden opponent cards"><span></span><span></span></div>
                     </article>
                 </div>
 
@@ -103,7 +59,7 @@
             </div>
         </section>
 
-        <section class="action-panel game-content" style="display: none;">
+        <section class="action-panel">
             <div class="game-status" id="gameStatus" aria-live="polite">Set your blind to start a new hand.</div>
             <div class="result-message" id="resultMessage" aria-live="polite"></div>
 
@@ -112,37 +68,40 @@
                 <div class="bet-input">
                     <label class="sr-only" for="betAmount">Blind amount</label>
                     <input type="number" id="betAmount" min="10" max="500" value="50" step="10">
-                    <button type="button" id="startHandButton">Start Hand</button>
+                    <button type="button" onclick="startPokerHand()">Start Hand</button>
                 </div>
                 <div class="quick-bets">
-                    <button type="button" data-quick-bet="50">$50</button>
-                    <button type="button" data-quick-bet="100">$100</button>
-                    <button type="button" data-quick-bet="250">$250</button>
-                    <button type="button" id="allInBlindButton" class="btn-all-in">All In</button>
+                    <button type="button" onclick="quickBet(50)">$50</button>
+                    <button type="button" onclick="quickBet(100)">$100</button>
+                    <button type="button" onclick="quickBet(250)">$250</button>
+                    <button type="button" onclick="allIn()" class="btn-all-in">All In</button>
                 </div>
+                <label for="peerInvite">Invite / answer code</label>
+                <textarea id="peerInvite" rows="4" placeholder="Paste invite code here to join, or answer code here for host"></textarea>
+                <label for="peerOutput">Your code to share</label>
+                <textarea id="peerOutput" rows="4" readonly placeholder="Generated invite or answer appears here"></textarea>
             </div>
 
             <div class="controls" id="gameControls" style="display: none;">
                 <div class="action-buttons">
-                    <button type="button" id="foldButton" class="btn-fold">Fold</button>
-                    <button type="button" id="checkButton" class="btn-check">Check</button>
-                    <button type="button" id="callButton" class="btn-call">Call</button>
-                    <button type="button" id="raiseButton" class="btn-raise">Raise</button>
-                    <button type="button" id="allInPokerButton" class="btn-all-in">All In</button>
+                    <button type="button" onclick="fold()" class="btn-fold">Fold</button>
+                    <button type="button" onclick="check()" class="btn-check">Check</button>
+                    <button type="button" onclick="call()" class="btn-call">Call</button>
+                    <button type="button" onclick="raise()" class="btn-raise">Raise</button>
+                    <button type="button" onclick="allInPoker()" class="btn-all-in">All In</button>
                 </div>
             </div>
 
             <div class="controls" id="playAgainControls" style="display: none;">
-                <button type="button" id="playAgainButton" class="btn-reset">Play Again</button>
+                <button type="button" onclick="playAgain()" class="btn-reset">Play Again</button>
             </div>
         </section>
 
-        <aside class="history game-content" style="display: none;">
+        <aside class="history">
             <h3>Session history</h3>
             <div id="history" class="history-list" aria-live="polite"></div>
         </aside>
     </main>
-    <script src="multiplayer-client.js"></script>
     <script src="holdem.js"></script>
 </body>
 </html>

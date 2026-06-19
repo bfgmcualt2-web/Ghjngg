@@ -16,19 +16,12 @@ let arcadeBalance = 1000;
 function renderArcade() {
     document.getElementById('arcadeGrid').innerHTML = arcadeGames.map((game) => `
         <article class="arcade-card" id="${game.id}">
-            <div class="game-heading">
-                <div class="game-icon">${game.icon}</div>
-                <div>
-                    <h2>${game.name}</h2>
-                    <div class="stake">Stake: $${game.bet}</div>
-                </div>
-            </div>
-            <div class="game-visual" id="visual-${game.id}" aria-label="${game.name} visual result">
-                ${getIdleVisual(game.id)}
-            </div>
+            <div class="game-icon">${game.icon}</div>
+            <h2>${game.name}</h2>
             <p>${game.detail}</p>
+            <div class="stake">Stake: $${game.bet}</div>
             <button type="button" onclick="playArcadeGame('${game.id}')">Play ${game.name}</button>
-            <div class="game-result" aria-live="polite">Press play to see the action.</div>
+            <div class="game-result" aria-live="polite"></div>
         </article>
     `).join('');
 }
@@ -48,96 +41,10 @@ function playArcadeGame(gameId) {
     document.getElementById('arcadeBalance').textContent = arcadeBalance;
 
     const message = won ? `${game.winText} You won $${payout - game.bet}!` : `${game.name} missed. You lost $${game.bet}.`;
-    const resultCard = document.querySelector(`#${game.id} .game-result`);
-    resultCard.textContent = message;
-    resultCard.className = `game-result ${won ? 'win' : 'loss'}`;
-
-    const visualCard = document.getElementById(`visual-${game.id}`);
-    visualCard.innerHTML = getResultVisual(game.id, won);
-    visualCard.className = `game-visual ${won ? 'win' : 'loss'} animate`;
-    setTimeout(() => visualCard.classList.remove('animate'), 550);
-
+    const card = document.querySelector(`#${game.id} .game-result`);
+    card.textContent = message;
+    card.className = `game-result ${won ? 'win' : 'loss'}`;
     updateArcadeHistory(`${game.icon} ${message}`, won ? 'win' : 'loss');
-}
-
-function getIdleVisual(gameId) {
-    const visuals = {
-        slots: reelVisual(['🍒', '7️⃣', '🍋']),
-        roulette: rouletteVisual('?', 'Spin'),
-        dice: diceVisual([1, 2]),
-        coin: coinVisual(['?', '?']),
-        wheel: wheelVisual('Prize'),
-        higher: cardBattleVisual('A♠', 'K♥'),
-        scratch: scratchVisual(['?', '?', '?']),
-        keno: kenoVisual([3, 8, 12], []),
-        plinko: plinkoVisual(2),
-        baccarat: baccaratVisual(['A♣', '6♦'], ['K♠', '4♥'])
-    };
-    return visuals[gameId] || '';
-}
-
-function getResultVisual(gameId, won) {
-    const visualFactories = {
-        slots: () => reelVisual(won ? ['💎', '💎', '💎'] : shuffle(['🍒', '🍋', '🔔', '7️⃣']).slice(0, 3)),
-        roulette: () => rouletteVisual(won ? 'RED' : 'BLACK', won ? 'Winner' : 'Miss'),
-        dice: () => diceVisual(won ? [6, randomInt(2, 6)] : [1, randomInt(1, 5)]),
-        coin: () => coinVisual(won ? ['HEADS', 'HEADS'] : ['HEADS', 'TAILS']),
-        wheel: () => wheelVisual(won ? 'JACKPOT' : 'TRY AGAIN'),
-        higher: () => cardBattleVisual(won ? 'A♠' : '4♣', won ? '9♥' : 'Q♦'),
-        scratch: () => scratchVisual(won ? ['💎', '💎', '💎'] : ['💎', '🍀', '⭐']),
-        keno: () => kenoVisual(won ? [7, 13, 21, 32, 44] : [2, 9, 18, 35, 49], won ? [7, 13, 21] : [9]),
-        plinko: () => plinkoVisual(won ? 4 : 1),
-        baccarat: () => baccaratVisual(won ? ['9♣', 'K♦'] : ['2♣', '5♦'], won ? ['3♠', '4♥'] : ['8♠', 'Q♥'])
-    };
-    return visualFactories[gameId]?.() || '';
-}
-
-function reelVisual(symbols) {
-    return `<div class="slot-reels">${symbols.map((symbol) => `<span>${symbol}</span>`).join('')}</div>`;
-}
-
-function rouletteVisual(value, label) {
-    return `<div class="roulette-wheel"><span>${value}</span></div><strong>${label}</strong>`;
-}
-
-function diceVisual(values) {
-    return `<div class="dice-row">${values.map((value) => `<span class="die">${value}</span>`).join('')}</div>`;
-}
-
-function coinVisual(values) {
-    return `<div class="coin-row">${values.map((value) => `<span class="coin-face">${value}</span>`).join('')}</div>`;
-}
-
-function wheelVisual(label) {
-    return `<div class="prize-wheel"><span>${label}</span></div>`;
-}
-
-function cardBattleVisual(playerCard, houseCard) {
-    return `<div class="card-battle"><span>${playerCard}</span><em>vs</em><span>${houseCard}</span></div>`;
-}
-
-function scratchVisual(symbols) {
-    return `<div class="scratch-row">${symbols.map((symbol) => `<span>${symbol}</span>`).join('')}</div>`;
-}
-
-function kenoVisual(numbers, hits) {
-    return `<div class="keno-board">${numbers.map((number) => `<span class="${hits.includes(number) ? 'hit' : ''}">${number}</span>`).join('')}</div>`;
-}
-
-function plinkoVisual(slot) {
-    return `<div class="plinko-board"><span>●</span><div>${[1, 2, 3, 4, 5].map((value) => `<b class="${value === slot ? 'hit' : ''}">${value}x</b>`).join('')}</div></div>`;
-}
-
-function baccaratVisual(playerCards, bankerCards) {
-    return `<div class="baccarat-table"><div><small>Player</small>${playerCards.map((card) => `<span>${card}</span>`).join('')}</div><div><small>Banker</small>${bankerCards.map((card) => `<span>${card}</span>`).join('')}</div></div>`;
-}
-
-function randomInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function shuffle(items) {
-    return [...items].sort(() => Math.random() - 0.5);
 }
 
 function updateArcadeHistory(message, result) {

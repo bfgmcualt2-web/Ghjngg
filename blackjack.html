@@ -12,54 +12,10 @@
             <a class="back-link" href="home.html">← Lobby</a>
             <p class="eyebrow">Blackjack Royale</p>
             <h1>🃏 Beat the Dealer</h1>
-            <div class="header-actions">
-                <div class="balance" aria-live="polite">Bankroll: $<span id="balance">1000</span></div>
-                <div class="mode-badge" id="modeBadge">Choose mode</div>
-            </div>
+            <div class="balance" aria-live="polite">Bankroll: $<span id="balance">1000</span></div>
         </header>
 
-        <section class="mode-select" id="modeSelect" aria-label="Choose Blackjack mode">
-            <div class="mode-card">
-                <span class="mode-icon">🎮</span>
-                <h2>Offline</h2>
-                <p>Play a solo Blackjack session against the dealer on this device.</p>
-                <button type="button" onclick="selectGameMode('offline')">Play Offline</button>
-            </div>
-            <div class="mode-card featured">
-                <span class="mode-icon">🌐</span>
-                <h2>Multiplayer</h2>
-                <p>Play with another person directly in the browser. No server download required.</p>
-                <button type="button" onclick="selectGameMode('multiplayer')">Start Multiplayer</button>
-            </div>
-        </section>
-
-        <section class="multiplayer-panel" id="multiplayerPanel" style="display: none;" aria-label="Blackjack multiplayer connection">
-            <h2>Multiplayer room</h2>
-            <p>No download needed: use a browser room for tabs on this site, or exchange WebRTC invite/answer codes with a remote player.</p>
-            <div class="multiplayer-form">
-                <input id="playerName" type="text" maxlength="24" placeholder="Your name" value="Player">
-                <input id="roomCode" type="text" maxlength="24" placeholder="Room code" value="casino-room">
-                <input id="serverUrl" type="url" placeholder="Optional WebSocket URL">
-                <button type="button" onclick="connectMultiplayer()">Open Browser Room</button>
-            </div>
-            <div class="multiplayer-status" id="multiplayerStatus">Not connected.</div>
-            <div class="players-list" id="playersList"></div>
-            <div class="peer-connect">
-                <h3>Remote player invite codes</h3>
-                <p>Host creates an invite, the second player pastes it and creates an answer, then the host accepts that answer.</p>
-                <div class="peer-buttons">
-                    <button type="button" onclick="createPeerInvite()">Create Host Invite</button>
-                    <button type="button" onclick="joinPeerInvite()">Join Invite</button>
-                    <button type="button" onclick="acceptPeerAnswer()">Accept Answer</button>
-                </div>
-                <label for="peerInvite">Invite / answer code</label>
-                <textarea id="peerInvite" rows="4" placeholder="Paste invite code here to join, or answer code here for host"></textarea>
-                <label for="peerOutput">Your code to share</label>
-                <textarea id="peerOutput" rows="4" readonly placeholder="Generated invite or answer appears here"></textarea>
-            </div>
-        </section>
-
-        <section class="table-shell game-content" aria-label="Blackjack table" style="display: none;">
+        <section class="table-shell" aria-label="Blackjack table">
             <div class="game-area">
                 <section class="dealer-section hand-panel">
                     <div class="hand-heading">
@@ -102,12 +58,11 @@
             </section>
         </section>
 
-        <aside class="history game-content" style="display: none;">
+        <aside class="history">
             <h3>Recent hands</h3>
             <div id="history" class="history-list" aria-live="polite"></div>
         </aside>
     </main>
-    <script src="multiplayer-client.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

@@ -18,7 +18,7 @@ function selectGameMode(mode) {
     document.getElementById('modeBadge').textContent = mode === 'multiplayer' ? 'Multiplayer table' : 'Offline table';
     if (mode === 'multiplayer') {
         document.getElementById('multiplayerPanel').style.display = '';
-        document.getElementById('resultMessage').textContent = 'Open a browser room or exchange WebRTC invite codes to play with another person without downloading anything.';
+        document.getElementById('resultMessage').textContent = 'Connect to a room to play Blackjack with real people on this server.';
         return;
     }
     document.querySelectorAll('.game-content').forEach((section) => {
@@ -29,46 +29,10 @@ function selectGameMode(mode) {
 
 
 function connectMultiplayer() {
-    ensureMultiplayerClient();
-    gameState.multiplayer.connect({
-        name: document.getElementById('playerName').value,
-        room: document.getElementById('roomCode').value,
-        url: document.getElementById('serverUrl').value
-    });
-}
-
-
-async function createPeerInvite() {
-    ensureMultiplayerClient();
-    const output = await gameState.multiplayer.createPeerInvite({
-        name: document.getElementById('playerName').value,
-        room: document.getElementById('roomCode').value
-    });
-    document.getElementById('peerOutput').value = output;
-    document.getElementById('multiplayerStatus').textContent = 'Host invite ready. Send this code to the other player.';
-}
-
-async function joinPeerInvite() {
-    ensureMultiplayerClient();
-    const output = await gameState.multiplayer.acceptPeerInvite(document.getElementById('peerInvite').value, {
-        name: document.getElementById('playerName').value
-    });
-    document.getElementById('peerOutput').value = output;
-    document.getElementById('multiplayerStatus').textContent = 'Answer ready. Send this answer code back to the host.';
-}
-
-async function acceptPeerAnswer() {
-    ensureMultiplayerClient();
-    await gameState.multiplayer.acceptPeerAnswer(document.getElementById('peerInvite').value);
-    document.getElementById('multiplayerStatus').textContent = 'Answer accepted. Browser peer connection is starting.';
-}
-
-function ensureMultiplayerClient() {
-    if (gameState.multiplayer) return;
     gameState.multiplayer = new CasinoMultiplayer({
         game: 'blackjack',
-        onConnected: (event) => {
-            document.getElementById('multiplayerStatus').textContent = `Connected via ${event.transport || 'multiplayer'}. You can play together now.`;
+        onConnected: ({ room }) => {
+            document.getElementById('multiplayerStatus').textContent = `Connected to room ${room}. Share this room code with other players.`;
             document.querySelectorAll('.game-content').forEach((section) => {
                 section.style.display = '';
             });
@@ -78,10 +42,12 @@ function ensureMultiplayerClient() {
             if (event.type === 'action' && event.fromName) {
                 document.getElementById('multiplayerStatus').textContent = `${event.fromName}: ${event.action}`;
             }
-            if (event.type === 'status') {
-                document.getElementById('multiplayerStatus').textContent = event.message;
-            }
         }
+    });
+    gameState.multiplayer.connect({
+        name: document.getElementById('playerName').value,
+        room: document.getElementById('roomCode').value,
+        url: document.getElementById('serverUrl').value
     });
 }
 

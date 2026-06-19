@@ -10,45 +10,21 @@ body {
 .arcade-header { position: relative; text-align: center; margin-bottom: 28px; padding: 28px; border: 1px solid rgba(255,255,255,.14); border-radius: 28px; background: rgba(5,10,25,.72); box-shadow: 0 24px 70px rgba(0,0,0,.38); }
 .back-link { position: absolute; left: 24px; top: 24px; color: #facc15; text-decoration: none; font-weight: 950; }
 .eyebrow { color: #facc15; font-size: .78rem; font-weight: 950; letter-spacing: .22em; text-transform: uppercase; }
-h1 { margin: 8px 0 10px; font-size: clamp(2.4rem, 7vw, 5rem); line-height: .95; }
-.arcade-subtitle { max-width: 720px; margin: 0 auto 16px; color: #cbd5e1; line-height: 1.6; }
+h1 { margin: 8px 0 16px; font-size: clamp(2.4rem, 7vw, 5rem); line-height: .95; }
 .wallet { display: inline-flex; padding: 10px 18px; border-radius: 999px; color: #bbf7d0; background: rgba(52,211,153,.14); border: 1px solid rgba(52,211,153,.38); font-weight: 950; }
-.arcade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+.arcade-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
 .arcade-card, .arcade-log { border: 1px solid rgba(255,255,255,.14); border-radius: 24px; background: rgba(8,13,30,.82); box-shadow: 0 18px 42px rgba(0,0,0,.28); padding: 22px; }
-.arcade-card { display: grid; gap: 14px; min-height: 410px; }
-.game-heading { display: flex; align-items: center; gap: 14px; }
+.arcade-card { display: grid; gap: 12px; min-height: 280px; }
 .game-icon { font-size: 3rem; filter: drop-shadow(0 10px 22px rgba(0,0,0,.38)); }
 .arcade-card h2 { color: #fde68a; }
 .arcade-card p { color: #cbd5e1; line-height: 1.5; }
-.stake { color: #86efac; font-weight: 900; margin-top: 4px; }
+.stake { color: #86efac; font-weight: 900; }
 .arcade-card button { align-self: end; border: none; border-radius: 14px; padding: 12px 14px; color: #111827; background: linear-gradient(135deg, #facc15, #f97316); font-weight: 1000; cursor: pointer; }
 .game-result { min-height: 44px; color: #cbd5e1; font-weight: 800; }
 .game-result.win, .history-item.win { color: #86efac; }
 .game-result.loss, .history-item.loss { color: #fda4af; }
-.game-visual { min-height: 118px; display: grid; place-items: center; gap: 8px; padding: 14px; border: 1px solid rgba(255,255,255,.12); border-radius: 18px; background: radial-gradient(circle at top, rgba(255,255,255,.12), rgba(15,23,42,.72)); box-shadow: inset 0 0 28px rgba(0,0,0,.24); overflow: hidden; }
-.game-visual.win { border-color: rgba(134,239,172,.55); box-shadow: inset 0 0 28px rgba(0,0,0,.24), 0 0 26px rgba(34,197,94,.18); }
-.game-visual.loss { border-color: rgba(253,164,175,.42); }
-.game-visual.animate { animation: popVisual .5s ease; }
-.slot-reels, .dice-row, .coin-row, .scratch-row, .card-battle { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; }
-.slot-reels span, .scratch-row span { display: grid; place-items: center; width: 56px; aspect-ratio: 1; border-radius: 14px; font-size: 2rem; background: linear-gradient(180deg, #fff7ed, #fed7aa); box-shadow: inset 0 -6px 0 rgba(0,0,0,.08); }
-.roulette-wheel, .prize-wheel { display: grid; place-items: center; width: 92px; aspect-ratio: 1; border: 8px dashed #facc15; border-radius: 50%; background: conic-gradient(#dc2626, #111827, #dc2626, #111827, #dc2626); color: #fff; text-align: center; font-weight: 1000; animation: slowSpin 7s linear infinite; }
-.prize-wheel { width: 104px; border-style: solid; background: conic-gradient(#facc15, #22c55e, #a855f7, #ef4444, #38bdf8, #facc15); color: #111827; }
-.die, .coin-face, .card-battle span, .baccarat-table span { display: grid; place-items: center; min-width: 54px; min-height: 70px; border-radius: 13px; background: linear-gradient(145deg, #fff, #e5e7eb); color: #111827; font-size: 1.45rem; font-weight: 1000; box-shadow: 0 12px 22px rgba(0,0,0,.22); }
-.coin-face { min-width: 78px; min-height: 78px; border-radius: 50%; background: linear-gradient(145deg, #fde68a, #f59e0b); font-size: .9rem; }
-.card-battle em { color: #facc15; font-style: normal; font-weight: 1000; }
-.keno-board { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; width: 100%; }
-.keno-board span, .plinko-board b { display: grid; place-items: center; min-height: 34px; border-radius: 999px; color: #dbeafe; background: rgba(96,165,250,.16); border: 1px solid rgba(96,165,250,.26); font-weight: 900; }
-.keno-board .hit, .plinko-board .hit { color: #111827; background: #86efac; border-color: #86efac; }
-.plinko-board { display: grid; gap: 10px; width: 100%; text-align: center; }
-.plinko-board > span { color: #facc15; font-size: 2.4rem; filter: drop-shadow(0 8px 16px rgba(250,204,21,.25)); }
-.plinko-board div { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.baccarat-table { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; width: 100%; }
-.baccarat-table div { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px; padding: 8px; border-radius: 14px; background: rgba(255,255,255,.06); }
-.baccarat-table small { width: 100%; color: #facc15; text-align: center; font-weight: 950; text-transform: uppercase; }
 .arcade-log { margin-top: 22px; }
 .arcade-log h2 { margin-bottom: 12px; color: #facc15; }
 .history-list { display: grid; gap: 8px; }
 .history-item { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.07); }
-@keyframes popVisual { 0% { transform: scale(.95); opacity: .7; } 60% { transform: scale(1.03); } 100% { transform: scale(1); opacity: 1; } }
-@keyframes slowSpin { to { transform: rotate(360deg); } }
-@media (max-width: 760px) { .back-link { position: static; display: inline-flex; margin-bottom: 14px; } .arcade-card { min-height: auto; } }
+@media (max-width: 760px) { .back-link { position: static; display: inline-flex; margin-bottom: 14px; } }
