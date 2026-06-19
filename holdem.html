@@ -4,72 +4,132 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Texas Hold'em Poker</title>
-    <link rel="stylesheet" href="game-styles.css">
     <link rel="stylesheet" href="holdem-styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <a href="home.html" class="back-btn">← Back to Home</a>
+    <main class="container">
+        <header class="header">
+            <a href="home.html" class="back-btn">← Lobby</a>
+            <p class="eyebrow">No-limit table</p>
             <h1>♠️ Texas Hold'em</h1>
-            <div class="balance">
-                <span>Balance: $<span id="balance">1000</span></span>
+            <div class="header-actions">
+                <div class="balance">Bankroll: $<span id="balance">1000</span></div>
+                <div class="mode-badge" id="modeBadge">Choose mode</div>
             </div>
-        </div>
-        <div class="poker-table">
-            <div class="community-section">
-                <h3>Community Cards</h3>
-                <div class="cards" id="communityCards"></div>
+        </header>
+
+        <section class="mode-select" id="modeSelect" aria-label="Choose Texas Hold'em mode">
+            <div class="mode-card">
+                <span class="mode-icon">🎮</span>
+                <h2>Offline</h2>
+                <p>Play a solo table against two computer opponents on this device.</p>
+                <button type="button" onclick="selectGameMode('offline')">Play Offline</button>
             </div>
-            <div class="opponents-section">
-                <div class="opponent">
-                    <div class="opponent-name">Opponent 1</div>
-                    <div class="opponent-stack">$<span class="opponent1-stack">1000</span></div>
-                    <div class="opponent-cards"><span>🃏</span><span>🃏</span></div>
+            <div class="mode-card featured">
+                <span class="mode-icon">🌐</span>
+                <h2>Multiplayer</h2>
+                <p>Create or join a real WebSocket room with other people on the same server.</p>
+                <button type="button" onclick="selectGameMode('multiplayer')">Start Multiplayer</button>
+            </div>
+        </section>
+
+        <section class="multiplayer-panel" id="multiplayerPanel" style="display: none;" aria-label="Texas Hold'em multiplayer connection">
+            <h2>Multiplayer room</h2>
+            <p>Start the included server, share the room code, and play with people connected to the same room.</p>
+            <div class="multiplayer-form">
+                <input id="playerName" type="text" maxlength="24" placeholder="Your name" value="Player">
+                <input id="roomCode" type="text" maxlength="24" placeholder="Room code" value="casino-room">
+                <input id="serverUrl" type="url" placeholder="WebSocket URL (optional)">
+                <button type="button" onclick="connectMultiplayer()">Connect</button>
+            </div>
+            <div class="multiplayer-status" id="multiplayerStatus">Not connected.</div>
+            <div class="players-list" id="playersList"></div>
+        </section>
+
+        <section class="poker-table game-content" aria-label="Texas Hold'em table" style="display: none;">
+            <div class="table-felt">
+                <div class="opponents-section" aria-label="Opponents">
+                    <article class="opponent">
+                        <div class="avatar">🤠</div>
+                        <div>
+                            <div class="opponent-name">Opponent 1</div>
+                            <div class="opponent-stack">Stack $<span class="opponent1-stack">1000</span></div>
+                        </div>
+                        <div class="opponent-cards" id="opponent1Cards" aria-label="Opponent 1 cards"><span></span><span></span></div>
+                    </article>
+                    <article class="opponent">
+                        <div class="avatar">😎</div>
+                        <div>
+                            <div class="opponent-name">Opponent 2</div>
+                            <div class="opponent-stack">Stack $<span class="opponent2-stack">1000</span></div>
+                        </div>
+                        <div class="opponent-cards" id="opponent2Cards" aria-label="Opponent 2 cards"><span></span><span></span></div>
+                    </article>
                 </div>
-                <div class="opponent">
-                    <div class="opponent-name">Opponent 2</div>
-                    <div class="opponent-stack">$<span class="opponent2-stack">1000</span></div>
-                    <div class="opponent-cards"><span>🃏</span><span>🃏</span></div>
+
+                <section class="community-section">
+                    <p class="section-label">The Board</p>
+                    <h2>Community Cards</h2>
+                    <div class="cards community-cards" id="communityCards" aria-label="Community cards"></div>
+                    <div class="pot-section">
+                        <span>Current Pot</span>
+                        <strong>$<span id="pot">0</span></strong>
+                    </div>
+                </section>
+
+                <section class="player-section">
+                    <div class="player-heading">
+                        <div>
+                            <p class="section-label">Your seat</p>
+                            <h2>Your Hand</h2>
+                        </div>
+                        <div class="hand-rank" id="handRank">Waiting for cards</div>
+                    </div>
+                    <div class="cards" id="playerCards" aria-label="Your cards"></div>
+                </section>
+            </div>
+        </section>
+
+        <section class="action-panel game-content" style="display: none;">
+            <div class="game-status" id="gameStatus" aria-live="polite">Set your blind to start a new hand.</div>
+            <div class="result-message" id="resultMessage" aria-live="polite"></div>
+
+            <div class="betting-section" id="bettingSection">
+                <h3>Post your blind</h3>
+                <div class="bet-input">
+                    <label class="sr-only" for="betAmount">Blind amount</label>
+                    <input type="number" id="betAmount" min="10" max="500" value="50" step="10">
+                    <button type="button" onclick="startPokerHand()">Start Hand</button>
+                </div>
+                <div class="quick-bets">
+                    <button type="button" onclick="quickBet(50)">$50</button>
+                    <button type="button" onclick="quickBet(100)">$100</button>
+                    <button type="button" onclick="quickBet(250)">$250</button>
+                    <button type="button" onclick="allIn()" class="btn-all-in">All In</button>
                 </div>
             </div>
-            <div class="player-section">
-                <h3>Your Hand</h3>
-                <div class="cards" id="playerCards"></div>
-                <div class="hand-rank" id="handRank"></div>
+
+            <div class="controls" id="gameControls" style="display: none;">
+                <div class="action-buttons">
+                    <button type="button" onclick="fold()" class="btn-fold">Fold</button>
+                    <button type="button" onclick="check()" class="btn-check">Check</button>
+                    <button type="button" onclick="call()" class="btn-call">Call</button>
+                    <button type="button" onclick="raise()" class="btn-raise">Raise</button>
+                    <button type="button" onclick="allInPoker()" class="btn-all-in">All In</button>
+                </div>
             </div>
-        </div>
-        <div class="pot-section">
-            <div class="pot">Pot: $<span id="pot">0</span></div>
-        </div>
-        <div class="betting-section" id="bettingSection">
-            <h3>Place Your Blind</h3>
-            <div class="bet-input">
-                <input type="number" id="betAmount" min="10" max="500" value="50" step="10">
-                <button onclick="startPokerHand()">Start Hand</button>
+
+            <div class="controls" id="playAgainControls" style="display: none;">
+                <button type="button" onclick="playAgain()" class="btn-reset">Play Again</button>
             </div>
-            <div class="quick-bets">
-                <button onclick="quickBet(50)">$50</button>
-                <button onclick="quickBet(100)">$100</button>
-                <button onclick="quickBet(250)">$250</button>
-                <button onclick="allIn()" class="btn-all-in">All In</button>
-            </div>
-        </div>
-        <div class="controls" id="gameControls" style="display: none;">
-            <div class="action-buttons">
-                <button onclick="fold()" class="btn-fold">Fold</button>
-                <button onclick="check()" class="btn-check">Check</button>
-                <button onclick="call()" class="btn-call">Call</button>
-                <button onclick="raise()" class="btn-raise">Raise</button>
-                <button onclick="allInPoker()" class="btn-all-in">All In</button>
-            </div>
-        </div>
-        <div class="game-status" id="gameStatus"></div>
-        <div class="result-message" id="resultMessage"></div>
-        <div class="controls" id="playAgainControls" style="display: none;">
-            <button onclick="playAgain()" class="btn-reset">Play Again</button>
-        </div>
-    </div>
+        </section>
+
+        <aside class="history game-content" style="display: none;">
+            <h3>Session history</h3>
+            <div id="history" class="history-list" aria-live="polite"></div>
+        </aside>
+    </main>
+    <script src="multiplayer-client.js"></script>
     <script src="holdem.js"></script>
 </body>
 </html>
